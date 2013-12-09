@@ -1,0 +1,26 @@
+======================
+OUTLINE:
+======================
+
+- Random land generation (2D w/ 3D aspects).
+	- Mines, structures, mountains, etc.
+	- Nations, Civilizations, etc.
+- Gather materials, resources
+	- Research -> chemistry, physics, etc.
+	- New technology & survival tools.
+		- Medicine, nukes, weapons, etc.
+- Other nations/people
+	- Be peaceful or go to war
+		- Use technology & inventions.
+	- Find their technology
+		- Reverse engineer, learn from it.
+	- Treaties, declarations of war
+		- Government systems
+	- Trading?
+- Researching & survive in world (populate it)
+	- Gather resources, fight monsters (work with others or all out domination?) -> strategy
+	- Research via exploration, science, etc.
+	
+======================
+TODO:
+======================
