@@ -7,16 +7,13 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import javax.swing.JFrame;
 
 import com.charredgames.game.game.entity.Player;
 import com.charredgames.game.game.graphics.Colour;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.charredgames.game.game.graphics.Tile;
+import com.charredgames.game.game.world.World;
 
 public class Game extends Canvas implements Runnable{
 
@@ -37,6 +34,7 @@ public class Game extends Canvas implements Runnable{
 	
 	private Keyboard keyboard;
 	private Player player;
+	private World world;
 	
 	private void tick(){
 		
@@ -109,19 +107,11 @@ public class Game extends Canvas implements Runnable{
 		window = new JFrame();
 		keyboard = new Keyboard();
 		addKeyListener(keyboard);
-		//player = new Player(keyboard);
+		player = new Player(keyboard);
+
+		System.out.println(Tile.AIR);
+		world = new World();
 		
-		//http://stackoverflow.com/questions/1089131/loading-and-saving-a-tile-based-game-in-java-xml-or-txt
-		
-		//XStream stream = new XStream(new StaxDriver());
-		if(!isRunning) {
-			/*try {
-				PrintWriter writer = new PrintWriter("text.txt", "UTF-8");
-				writer.println(stream.toXML(player));
-				writer.close();
-			} catch (FileNotFoundException e) {e.printStackTrace();} catch (UnsupportedEncodingException e) {e.printStackTrace();}*/
-				player = (Player) stream.fromXML("text.txt");
-		}
 	}
 	
 	public static void main(String[] args){
