@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 
 import com.charredgames.game.game.entity.Player;
 import com.charredgames.game.game.graphics.Colour;
+import com.charredgames.game.game.graphics.Screen;
 import com.charredgames.game.game.graphics.Tile;
 import com.charredgames.game.game.world.World;
 
@@ -35,12 +36,26 @@ public class Game extends Canvas implements Runnable{
 	private Keyboard keyboard;
 	private Player player;
 	private World world;
+	private Screen screen;
 	
 	private void tick(){
-		
+		keyboard.update();
+		player.update();
 	}
 	
 	private void render(){
+		
+		screen.clear();
+		int xOffset = (player.getX()) - (_WIDTH/2);
+		int yOffset = (player.getY()) - (_HEIGHT/2);
+		System.out.println(xOffset + " " + player.getX());
+		
+		
+		//screen.setOffset(xOffset, yOffset);
+		world.render(xOffset, yOffset, screen);
+		
+		for(int i = 0; i < pixels.length; i++) pixels[i] = screen.pixels[i];
+		
 		g.drawImage(gameImage, 0, 0, window.getWidth(), window.getHeight(), null);
 		
 		drawHUD();
@@ -107,6 +122,7 @@ public class Game extends Canvas implements Runnable{
 		window = new JFrame();
 		keyboard = new Keyboard();
 		addKeyListener(keyboard);
+		screen = new Screen(_WIDTH, _HEIGHT);
 		player = new Player(keyboard);
 
 		System.out.println(Tile.AIR);

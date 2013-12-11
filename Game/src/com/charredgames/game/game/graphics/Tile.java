@@ -6,26 +6,20 @@ public class Tile {
 
 	private Sprite sprite;
 	private boolean isSolid;
+	private String name;
 	
-	public static final Tile AIR = new Tile(0, Sprite.nullSprite, false);
-	public static final Tile a = new Tile(1, Sprite.nullSprite, true);
-	public static final Tile b = new Tile(2, Sprite.nullSprite, true);
-	public static final Tile c = new Tile(3, Sprite.nullSprite, true);
-	public static final Tile d = new Tile(4, Sprite.nullSprite, true);
-	public static final Tile e = new Tile(5, Sprite.nullSprite, true);
-	public static final Tile f = new Tile(6, Sprite.nullSprite, true);
-	public static final Tile g = new Tile(7, Sprite.nullSprite, true);
-	public static final Tile h = new Tile(8, Sprite.nullSprite, true);
-	public static final Tile i = new Tile(9, Sprite.nullSprite, true);
-	public static final Tile j = new Tile(10, Sprite.nullSprite, true);
-	public static final Tile k = new Tile(11, Sprite.nullSprite, true);
-	public static final Tile l = new Tile(12, Sprite.nullSprite, true);
-	public static final Tile m = new Tile(13, Sprite.nullSprite, true);
-	public static final Tile n = new Tile(14, Sprite.nullSprite, true);
-	public static final Tile o = new Tile(15, Sprite.nullSprite, true);
+	public static final Tile AIR = new Tile("AIR", 0, Sprite.IRON, false);
+	public static final Tile DIRT = new Tile("DIRT", 1, Sprite.nullSprite, true);
+	public static final Tile STONE = new Tile("STONE", 10, Sprite.nullSprite, true);
+	public static final Tile COAL = new Tile("COAL", 11, Sprite.nullSprite, true);
+	public static final Tile IRON = new Tile("IRON", 12, Sprite.nullSprite, true);
+	public static final Tile URANIUM = new Tile("URANIUM", 13, Sprite.nullSprite, true);
+	public static final Tile PLUTONIUM = new Tile("PLUTONIUM", 14, Sprite.nullSprite, true);
+	public static final Tile BEDROCK = new Tile("BEDROCK", 100, Sprite.BEDROCK, true);
 	
 	
-	public Tile(int identifier, Sprite sprite, boolean solid){
+	public Tile(String name, int identifier, Sprite sprite, boolean solid){
+		this.name = name;
 		this.sprite = sprite;
 		this.isSolid = solid;
 		Controller.addTile(identifier, this);
@@ -37,6 +31,10 @@ public class Tile {
 	
 	public boolean isSolid(){
 		return isSolid;
+	}
+	
+	public String getName(){
+		return name;
 	}
 	
 }

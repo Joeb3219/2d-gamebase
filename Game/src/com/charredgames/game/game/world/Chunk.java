@@ -1,6 +1,5 @@
 package com.charredgames.game.game.world;
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.charredgames.game.game.Controller;
+import com.charredgames.game.game.graphics.Tile;
 
 
 /**
@@ -38,22 +38,6 @@ public class Chunk implements Runnable{
 	}
 	
 	public void generateRandomChunk(){
-		/*ArrayList<Integer> rowTiles = new ArrayList<Integer>();
-		int row = 0;
-		for(int i = 0; i < tiles.length; i ++){
-			
-			int value = rand.nextInt((Controller.tileIdentifiers.size()));
-			if(i % 16 == 0) {
-				tileMap.put(row, rowTiles);
-				row ++;
-				rowTiles.clear();
-			}
-			rowTiles.add(value);
-			
-			tiles[i] = value;
-			
-		}*/
-		
 		ArrayList<Integer> rowTiles = new ArrayList<Integer>();
 		int row = 0, col = 1;
 		ArrayList<Integer> tiles = generator.generateRandomTiles();
@@ -110,5 +94,17 @@ public class Chunk implements Runnable{
 		saveChunk();
 		updated = false;
 	}
+
+	public int getId(){
+		return id;
+	}
 	
+	public Tile getTile(int x, int y){
+		//if(y >= tileMap.size() || 16 >= x) return Tile.AIR;
+		int tileId = tileMap.get(y).get(x);
+		for(Entry<Integer, Tile> entry : Controller.tileIdentifiers.entrySet()){
+			if(entry.getKey() == tileId) return entry.getValue();
+		}
+		return Tile.AIR;
+	}
 }

@@ -23,6 +23,10 @@ public class Mob extends Entity{
 		this.maxHealth = type.getMaxHealth();
 	}
 	
+	public void update(){
+		
+	}
+	
 	public int getHealth(){
 		return health;
 	}
@@ -31,4 +35,11 @@ public class Mob extends Entity{
 		return maxHealth;
 	}
 	
+	public int getX(){
+		return x;
+	}
+	
+	public int getY(){
+		return y;
+	}
 }

@@ -25,19 +25,45 @@ public class ChunkGenerator {
 	public ArrayList<Integer> generateRandomTiles(){
 		ArrayList<Integer> tiles = new ArrayList<Integer>();
 		
-		int maxVal = 0;
 		
 		for(int y = 0; y < 128; y++){
-			if(y <= 30) maxVal = 1;
-			else if(y <= 30) maxVal = 1;
-			else if(y <= 40) maxVal = 2;
-			else if(y <= 60) maxVal = 4;
-			else if(y <= 80) maxVal = 10;
-			else if(y <= 90) maxVal = 12;
-			else if(y <= 100) maxVal = 15;
-			else maxVal = 100;
 			for(int x = 0; x < 16; x ++){
-				tiles.add(rand.nextInt(maxVal));
+				int value = rand.nextInt(100);
+				if(y <= 30) tiles.add(0);
+				else if(y <= 55){
+					if(value <= 40) tiles.add(0);
+					else tiles.add(1);
+				}
+				else if(y <= 48){
+					if(value <= 20) tiles.add(0);
+					else if(value <= 40) tiles.add(1);
+					else tiles.add(2);
+				}
+				else if(y <= 80){
+					if(value <= 5) tiles.add(0);
+					else if(value <= 70) tiles.add(2);
+					else if(value <= 80) tiles.add(10);
+					else if(value <= 90) tiles.add(11);
+					else tiles.add(12);
+				}
+				else if(y <= 120){
+					if(value <= 5) tiles.add(0);
+					else if(value <= 70) tiles.add(2);
+					else if(value <= 80) tiles.add(10);
+					else if(value <= 90) tiles.add(11);
+					else if(value <= 95) tiles.add(12);
+					else tiles.add(13);
+				}
+				else if(y == 127 || y == 128) tiles.add(100);
+				else{
+					if(value <= 5) tiles.add(0);
+					else if(value <= 70) tiles.add(2);
+					else if(value <= 80) tiles.add(10);
+					else if(value <= 90) tiles.add(11);
+					else if(value <= 95) tiles.add(12);
+					else if(value <= 98) tiles.add(13);
+					else tiles.add(14);
+				}
 			}
 		}
 		

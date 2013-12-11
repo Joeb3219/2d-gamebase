@@ -8,7 +8,9 @@ public class Sprite {
 	public int[] pixels;
 	private SpriteSheet spriteSheet;
 
-	public static final Sprite nullSprite = new Sprite(16, 0xFF222222);
+	public static final Sprite nullSprite = new Sprite(8, 0xFF222222);
+	public static final Sprite IRON = new Sprite(8, 0xFFFFFFFF);
+	public static final Sprite BEDROCK = new Sprite(8, 0xFF000000);
 	
 	public Sprite(int size, int x, int y, SpriteSheet spriteSheet){
 		this.size = size;
@@ -24,6 +26,7 @@ public class Sprite {
 		pixels = new int[size * size];
 		for(int i = 0; i < pixels.length; i++) pixels[i] = colour;
 	}
+
 	
 	private void load(){
 		for(int y = 0; y < size; y ++){
