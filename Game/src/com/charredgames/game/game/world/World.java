@@ -25,7 +25,7 @@ public class World{
 				for(Chunk chunk : chunks){
 					if(!chunk.hasUpdated()) continue;
 					saved ++;
-					chunk.saveChunk();
+					chunk.saveChunk(1);
 					chunk.setUpdated(false);
 				}
 				if(Controller.debug) System.out.println(saved + " chunks saved!");

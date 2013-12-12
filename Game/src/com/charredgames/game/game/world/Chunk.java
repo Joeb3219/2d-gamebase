@@ -60,10 +60,10 @@ public class Chunk{
 		return 1;
 	}
 	
-	public void saveChunk(){
+	public void saveChunk(int worldId){
 		PrintWriter writer;
 		try {
-			writer = new PrintWriter("world/chunk" + id + ".cgf", "UTF-8");
+			writer = new PrintWriter("saves/" + worldId + "/chunk" + id + ".cgf", "UTF-8");
 			for(Entry<Integer, ArrayList<Integer>> entry : tileMap.entrySet()){
 				String output = "";
 				int pos = 0;
