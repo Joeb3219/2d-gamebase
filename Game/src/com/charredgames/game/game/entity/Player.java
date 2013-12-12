@@ -11,13 +11,13 @@ public class Player extends Mob{
 	}
 	
 	public void update(){
-		if(input.down) y++;
-		if(input.right) x++;
-		if(input.left) x--;
-		if(input.jump) y--;
+		if(input.down) y += 2;
+		if(input.right) x += 2;
+		if(input.left) x -= 2;
+		if(input.jump) y -= 2;
 		
 		if(y < 0) y = 0;
-		if(y > 128 * 8) y = 128 * 8;
+		if(y > 256 * 8) y = 256 * 8;
 	}
 	
 }

@@ -9,11 +9,12 @@ import java.util.Random;
  */
 public class ChunkGenerator {
 
-	private int id, startingXPos;
+	private int id, startingXPos, chunkHeight;
 	private Random rand = new Random();
 	
-	public ChunkGenerator(int id){
+	public ChunkGenerator(int id, int chunkHeight){
 		this.id = id;
+		this.chunkHeight = chunkHeight;
 		this.startingXPos = id * 16;
 	}
 	
@@ -26,28 +27,28 @@ public class ChunkGenerator {
 		ArrayList<Integer> tiles = new ArrayList<Integer>();
 		
 		
-		for(int y = 0; y < 128; y++){
+		for(int y = 0; y < chunkHeight; y++){
 			for(int x = 0; x < 16; x ++){
 				int value = rand.nextInt(100);
-				if(y <= 30) tiles.add(0);
-				else if(y <= 55){
-					if(value <= 40) tiles.add(0);
+				if(y <= 55) tiles.add(0);
+				else if(y <= 60){
+					if(value <= 10) tiles.add(0);
 					else tiles.add(1);
 				}
-				else if(y <= 48){
-					if(value <= 20) tiles.add(0);
+				else if(y <= 70){
+					if(value <= 1) tiles.add(0);
 					else if(value <= 40) tiles.add(1);
 					else tiles.add(2);
 				}
 				else if(y <= 80){
-					if(value <= 5) tiles.add(0);
+					if(value <= 1) tiles.add(0);
 					else if(value <= 70) tiles.add(2);
 					else if(value <= 80) tiles.add(10);
 					else if(value <= 90) tiles.add(11);
 					else tiles.add(12);
 				}
 				else if(y <= 120){
-					if(value <= 5) tiles.add(0);
+					if(value <= 1) tiles.add(0);
 					else if(value <= 70) tiles.add(2);
 					else if(value <= 80) tiles.add(10);
 					else if(value <= 90) tiles.add(11);
@@ -56,7 +57,7 @@ public class ChunkGenerator {
 				}
 				else if(y == 127 || y == 128) tiles.add(100);
 				else{
-					if(value <= 5) tiles.add(0);
+					if(value <= 1) tiles.add(0);
 					else if(value <= 70) tiles.add(2);
 					else if(value <= 80) tiles.add(10);
 					else if(value <= 90) tiles.add(11);

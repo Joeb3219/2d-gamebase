@@ -47,18 +47,26 @@ public class Game extends Canvas implements Runnable{
 		
 		screen.clear();
 		int xOffset = (player.getX()) - (_WIDTH/2);
-		int yOffset = (player.getY()) - (_HEIGHT/2);
-		System.out.println(xOffset + " " + player.getX());
+		int yOffset = (player.getY()) - (_HEIGHT/2);		
 		
+		if(yOffset < 0) yOffset = 1;
 		
-		//screen.setOffset(xOffset, yOffset);
-		world.render(xOffset, yOffset, screen);
+		screen.setOffset(xOffset, yOffset);
+		world.render(player.getX(), screen);
 		
 		for(int i = 0; i < pixels.length; i++) pixels[i] = screen.pixels[i];
 		
 		g.drawImage(gameImage, 0, 0, window.getWidth(), window.getHeight(), null);
 		
+		g.setColor(Color.green);
+		g.fillRect(player.getX(), player.getY(), 16, 16);
+		
 		drawHUD();
+		
+		//Draw diagnostics stuff
+		int currentChunkId = world.getChunkId(player.getX());
+		g.drawString("In chunk " + currentChunkId + " (x-start: " + (currentChunkId * 16 * 8) + ", end: " + ((currentChunkId * 16 * 8) + (16 * 8)) + " )", 5, 55);
+		g.drawString("Player: pos(" + player.getX() + " x, " + player.getY() + " y)", 5, 70);
 		
 		buffer.show();
 	}
@@ -125,7 +133,7 @@ public class Game extends Canvas implements Runnable{
 		screen = new Screen(_WIDTH, _HEIGHT);
 		player = new Player(keyboard);
 
-		System.out.println(Tile.AIR);
+		if(Tile.AIR instanceof Tile) //This is used to instantiate the Tile class. Stupid way to do it, but works. Yoloswag.
 		world = new World();
 		
 	}

@@ -9,8 +9,7 @@ public class Sprite {
 	private SpriteSheet spriteSheet;
 
 	public static final Sprite nullSprite = new Sprite(8, 0xFF222222);
-	public static final Sprite IRON = new Sprite(8, 0xFFFFFFFF);
-	public static final Sprite BEDROCK = new Sprite(8, 0xFF000000);
+	public static final Sprite BEDROCK = new Sprite(8, 0xFF524A3E);
 	
 	public Sprite(int size, int x, int y, SpriteSheet spriteSheet){
 		this.size = size;

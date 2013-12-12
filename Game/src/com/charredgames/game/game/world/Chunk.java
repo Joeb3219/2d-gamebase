@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import com.charredgames.game.game.Controller;
 import com.charredgames.game.game.graphics.Tile;
@@ -18,23 +17,20 @@ import com.charredgames.game.game.graphics.Tile;
  * @author Joe Boyle <joe@charredgames.com>
  * @since Dec 9, 2013
  */
-public class Chunk implements Runnable{
+public class Chunk{
 
 	private int id;
 	private int[] tiles;
 	private Map<Integer, ArrayList<Integer>> tileMap = new LinkedHashMap<Integer, ArrayList<Integer>>();
-	private Random rand = new Random();
-	private Thread chunkThread;
 	private boolean updated = false;
 	private ChunkGenerator generator;
+	private int chunkHeight = 256; //Was 128
 	
 	public Chunk(int id){
 		this.id = id;
-		generator = new ChunkGenerator(id);
-		tiles = new int[16 * 128];
+		generator = new ChunkGenerator(id, chunkHeight);
+		tiles = new int[16 * chunkHeight];
 		for(int i = 0; i < tiles.length; i ++) tiles[i] = 0;
-		chunkThread = new Thread(this, "chunk" + id);
-		chunkThread.start();
 	}
 	
 	public void generateRandomChunk(){
@@ -64,10 +60,10 @@ public class Chunk implements Runnable{
 		return 1;
 	}
 	
-	private void saveChunk(){
+	public void saveChunk(){
 		PrintWriter writer;
 		try {
-			writer = new PrintWriter("chunk" + id + ".cgf", "UTF-8");
+			writer = new PrintWriter("world/chunk" + id + ".cgf", "UTF-8");
 			for(Entry<Integer, ArrayList<Integer>> entry : tileMap.entrySet()){
 				String output = "";
 				int pos = 0;
@@ -84,19 +80,16 @@ public class Chunk implements Runnable{
 		}
 	}
 
-	public void run() {
-		try {
-			chunkThread.sleep(10000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		if(!updated) return;
-		saveChunk();
-		updated = false;
-	}
-
 	public int getId(){
 		return id;
+	}
+	
+	public void setUpdated(boolean val){
+		updated = val;
+	}
+	
+	public boolean hasUpdated(){
+		return updated;
 	}
 	
 	public Tile getTile(int x, int y){

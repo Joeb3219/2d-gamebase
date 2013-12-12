@@ -1,17 +1,38 @@
 package com.charredgames.game.game.world;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import com.charredgames.game.game.Controller;
 import com.charredgames.game.game.Game;
 import com.charredgames.game.game.graphics.Screen;
 import com.charredgames.game.game.graphics.Tile;
 
-public class World {
+public class World{
 
 	private ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+	//private Thread chunkThread;
 	
 	public World(){
 		generateWorld();
+		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+		exec.scheduleAtFixedRate(new Runnable(){
+			public void run() {
+				if(Controller.debug) System.out.println("Running chunk saves");
+				int saved = 0;
+				for(Chunk chunk : chunks){
+					if(!chunk.hasUpdated()) continue;
+					saved ++;
+					chunk.saveChunk();
+					chunk.setUpdated(false);
+				}
+				if(Controller.debug) System.out.println(saved + " chunks saved!");
+			}
+		}, 2, 15, TimeUnit.SECONDS);
+		//chunkThread = new Thread(this);
+		//chunkThread.start();
 	}
 	
 	private void generateWorld(){
@@ -36,23 +57,19 @@ public class World {
 			if(chunk.getId() == chunkId) return chunk.getTile(x, y);
 		}
 		
-		return Tile.AIR;
+		Chunk newChunk = new Chunk(chunkId);
+		newChunk.generateRandomChunk();
+		chunks.add(newChunk);
+		return Tile.BEDROCK;
 	}
 	
-	public void render(int xOffset, int yOffset,  Screen screen){
-		//int xMin = (int) (playerX - (2.5 * 16));
-		//int xMax = (int) (playerX + (2.5 * 16));
+	public void render(int playerX,  Screen screen){
+		int xMin = (int) ((playerX - (Game._WIDTH / 2)) - (2.5 * 16));
+		int xMax = (int) ((playerX + (Game._WIDTH / 2)) + (2.5 * 16));
 		
-		int xMax = (int) ((xOffset + (Game._WIDTH / 2)) + (2.5) * 16);
-		
-		int x0 = (int) ((xOffset + (screen.getWidth()) - (2.5 * 16)) + 8 ) / 8;
-		int x1 = (int) ((xOffset + (screen.getWidth()) + (2.5 * 16)) + 8 ) / 8;
-		int y0 = (yOffset + screen.getHeight() + 8) / 8;
-		int y1 = (128);
-		
-		for(int y = y0 * 8; y < y1; y ++){
-			for(int x = x0; x < x1; x ++){
-				getTile(x,y).render(x * 8, y * 8, screen);
+		for(int y = 0 * 8; y < (256 * 8); y += 8){
+			for(int x = xMin; x < xMax; x += 8){
+				getTile(x,y).render(x, y, screen);
 			}
 		}
 		
@@ -66,5 +83,22 @@ public class World {
 			}
 		}*/
 	}
+	
+	public int getChunkId(int x){
+		x /= 8;
+		x = (int) Math.floor(x--);
+		
+		int chunkId = x/16;
+		return chunkId;
+	}
+
+	/*public void run() {
+		
+		try {
+			chunkThread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}*/
 	
 }
