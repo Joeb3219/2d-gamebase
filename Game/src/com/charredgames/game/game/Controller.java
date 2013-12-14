@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.charredgames.game.game.graphics.Tile;
+import com.charredgames.game.game.inventory.Material;
 
 public class Controller {
 
-	/* http://www.java-gaming.org/index.php?PHPSESSID=0q5u6pr9relos5s6spsdnmjpc2&topic=25516.0
+	/*
 	 * Dev options
 	 */
 	
@@ -17,10 +18,16 @@ public class Controller {
 	 * Controller
 	 */
 	
+	public static final int _TILESIZE = 8;
 	public static Map<Integer, Tile> tileIdentifiers = new HashMap<Integer, Tile>();
+	public static Map<Integer, Material> materialIdentifiers = new HashMap<Integer, Material>();
 	
 	public static void addTile(int identifier, Tile tile){
 		tileIdentifiers.put(identifier, tile);
+	}
+
+	public static void addMaterial(int id, Material material){
+		materialIdentifiers.put(id, material);
 	}
 	
 }

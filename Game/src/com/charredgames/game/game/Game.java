@@ -1,14 +1,26 @@
 package com.charredgames.game.game;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2i;
+
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import javax.swing.JFrame;
+
+import org.lwjgl.opengl.Display;
 
 import com.charredgames.game.game.entity.Player;
 import com.charredgames.game.game.graphics.Colour;
@@ -22,7 +34,7 @@ public class Game extends Canvas implements Runnable{
 	public static final int _WIDTH = 600;
 	public static final int _HEIGHT = _WIDTH / 16 * 9;
 	public static int _SCALE = 2;
-	public static final int _DESIREDTPS = 60;
+	public static final int _DESIREDTPS = 30;
 	public static String title = "CharredGames game ";
 	
 	private static boolean isRunning = false;
@@ -35,12 +47,18 @@ public class Game extends Canvas implements Runnable{
 	
 	private Keyboard keyboard;
 	private Player player;
-	private World world;
+	public static World world;
 	private Screen screen;
 	
 	private void tick(){
 		keyboard.update();
 		player.update();
+		
+		if(Mouse.button == 1){
+			int x = Mouse.x;
+			int y = Mouse.y;
+			System.out.println(world.getTile(x, y).getName() + " @ " + x + ", " + y);
+		}
 	}
 	
 	private void render(){
@@ -53,20 +71,20 @@ public class Game extends Canvas implements Runnable{
 		
 		screen.setOffset(xOffset, yOffset);
 		world.render(player.getX(), screen);
+		player.render(screen);
 		
 		for(int i = 0; i < pixels.length; i++) pixels[i] = screen.pixels[i];
 		
 		g.drawImage(gameImage, 0, 0, window.getWidth(), window.getHeight(), null);
 		
-		g.setColor(Color.green);
-		g.fillRect(player.getX(), player.getY(), 16, 16);
 		
-		drawHUD();
+		//drawHUD();
 		
 		//Draw diagnostics stuff
+		//g.setColor(Colour.HUD_HEALTH_DIVIDER.getColour());
 		int currentChunkId = world.getChunkId(player.getX());
-		g.drawString("In chunk " + currentChunkId + " (x-start: " + (currentChunkId * 16 * 8) + ", end: " + ((currentChunkId * 16 * 8) + (16 * 8)) + " )", 5, 55);
-		g.drawString("Player: pos(" + player.getX() + " x, " + player.getY() + " y)", 5, 70);
+		g.drawString("In chunk " + currentChunkId + " (x-start: " + (currentChunkId * 16 * 8) + ", end: " + ((currentChunkId * 16 * 8) + (16 * 8)) + " ) out of " + world.getTotalChunks() + " chunks total.", 5, 55);
+		g.drawString("Player: pos(" + player.getX() + " x, " + player.getY() + " y)" + " standingOn(" + world.getTile(player.getX(), player.getY()).getName() + " (" + world.getTile(player.getX(), player.getY()).isSolid() + ") )", 5, 70);
 		
 		buffer.show();
 	}
@@ -75,6 +93,8 @@ public class Game extends Canvas implements Runnable{
 		int healthBarX = 2;
 		int healthBarY = 2;
 		int healthBarWidth = player.getMaxHealth() * 2 + 10;
+		int inventoryBarX = window.getWidth() - 358;
+		int inventoryBarY = 2;
 		
 		//Draw health bar
 		g.setColor(Colour.HUD_BG.getColour());
@@ -88,10 +108,19 @@ public class Game extends Canvas implements Runnable{
 			g.setColor(Colour.HUD_HEALTH_DIVIDER.getColour());
 			g.fillRect(xPos + 5, healthBarY + 20, 2, 10);
 		}
+		g.setColor(Colour.HUD_INVENTORY_DIVIDER.getColour());
+		g.fillRect(inventoryBarX, inventoryBarY, 348, 40);
+		int spotPos = inventoryBarX + 6;
+		g.setColor(Colour.HUD_INVENTORY_SLOT.getColour());
+		for(int i = 0; i < 9; i++){
+			g.fillRect(spotPos, 6, 32, 32);
+			spotPos += (6 + 32);
+		}
+		g.setColor(Colour.HUD_HEALTH_DIVIDER.getColour());
 	}
 	
 	private void init(){
-		createBufferStrategy(3);
+		createBufferStrategy(2);
 		buffer = getBufferStrategy();
 		g = buffer.getDrawGraphics();
 		for(int i = 0; i < pixels.length; i++) pixels[i] = 0xFF448844;
@@ -130,6 +159,9 @@ public class Game extends Canvas implements Runnable{
 		window = new JFrame();
 		keyboard = new Keyboard();
 		addKeyListener(keyboard);
+		Mouse mouse = new Mouse();
+		addMouseListener(mouse);
+		addMouseMotionListener(mouse);
 		screen = new Screen(_WIDTH, _HEIGHT);
 		player = new Player(keyboard);
 
@@ -141,6 +173,23 @@ public class Game extends Canvas implements Runnable{
 	public static void main(String[] args){
 		Game game = new Game();
 		
+		game.setIgnoreRepaint(true);
+		/*try {
+			Display.setDisplayMode(new DisplayMode(_WIDTH * _SCALE, _HEIGHT * _SCALE));
+			Display.setTitle(title);
+			Display.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+		}
+		
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, _WIDTH * _SCALE, _HEIGHT * _SCALE, 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		glEnable(GL_TEXTURE_2D);
+		
+		loop();*/
+		
 		window.add(game);
 		window.pack();
 		window.setLocationRelativeTo(null);
@@ -148,7 +197,25 @@ public class Game extends Canvas implements Runnable{
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
 		
+		System.setProperty("sun.java2d.opengl", "true");
+		
 		game.start();
+	}
+	
+	private static void loop(){
+		while(!Display.isCloseRequested()){
+			
+			glClear(GL_COLOR_BUFFER_BIT);
+			
+			glBegin(GL_LINES);
+				glVertex2i(50, 50);
+				glVertex2i(100, 100);
+			glEnd();
+			
+			Display.update();
+			Display.sync(60);
+		}
+		Display.destroy();
 	}
 	
 	private void start(){
@@ -166,5 +233,4 @@ public class Game extends Canvas implements Runnable{
 		}
 	}
 
-	
 }

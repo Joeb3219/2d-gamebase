@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.charredgames.game.game.Controller;
-import com.charredgames.game.game.graphics.Tile;
+import com.charredgames.game.game.block.Block;
+import com.charredgames.game.game.inventory.Material;
 
 
 /**
@@ -21,7 +22,7 @@ public class Chunk{
 
 	private int id;
 	private int[] tiles;
-	private Map<Integer, ArrayList<Integer>> tileMap = new LinkedHashMap<Integer, ArrayList<Integer>>();
+	private Map<Integer, ArrayList<Block>> blockMap = new LinkedHashMap<Integer, ArrayList<Block>>();
 	private boolean updated = false;
 	private ChunkGenerator generator;
 	private int chunkHeight = 256; //Was 128
@@ -35,15 +36,18 @@ public class Chunk{
 	
 	public void generateRandomChunk(){
 		ArrayList<Integer> rowTiles = new ArrayList<Integer>();
+		ArrayList<Block> rowBlocks = new ArrayList<Block>();
 		int row = 0, col = 1;
 		ArrayList<Integer> tiles = generator.generateRandomTiles();
 		for(int i : tiles){
 			rowTiles.add(i);
+			rowBlocks.add(new Block(Controller.materialIdentifiers.get(i)));
 			if(col == 16){
-				tileMap.put(row, rowTiles);
+				blockMap.put(row, rowBlocks);
 				col = 0;
 				row++;
 				rowTiles = new ArrayList<Integer>();
+				rowBlocks = new ArrayList<Block>();
 			}
 			col++;
 		}
@@ -52,9 +56,9 @@ public class Chunk{
 	}
 	
 	private int getHighestYPos(int xPos){
-		for(int row = 0; row < tileMap.size(); row++){
-			for(int i : tileMap.get(row)){
-				if(!Controller.tileIdentifiers.get(i).isSolid()) return row;
+		for(int row = 0; row < blockMap.size(); row++){
+			for(Block block : blockMap.get(row)){
+				if(!block.isSolid()) return row;
 			}
 		}
 		return 1;
@@ -64,10 +68,11 @@ public class Chunk{
 		PrintWriter writer;
 		try {
 			writer = new PrintWriter("saves/" + worldId + "/chunk" + id + ".cgf", "UTF-8");
-			for(Entry<Integer, ArrayList<Integer>> entry : tileMap.entrySet()){
+			for(Entry<Integer, ArrayList<Block>> entry : blockMap.entrySet()){
 				String output = "";
 				int pos = 0;
-				for(int i : entry.getValue()){
+				for(Block block : entry.getValue()){
+					int i = block.getMaterial().getId();
 					pos++;
 					if(pos<16) output = output +  i + ",";
 					else output = output +  i;
@@ -92,12 +97,20 @@ public class Chunk{
 		return updated;
 	}
 	
-	public Tile getTile(int x, int y){
+	public Block getBlockAt(int x, int y){
 		//if(y >= tileMap.size() || 16 >= x) return Tile.AIR;
-		int tileId = tileMap.get(y).get(x);
+		/*int tileId = tileMap.get(y).get(x);
 		for(Entry<Integer, Tile> entry : Controller.tileIdentifiers.entrySet()){
 			if(entry.getKey() == tileId) return entry.getValue();
 		}
-		return Tile.AIR;
+		return Tile.AIR;*/
+		
+		Block block = blockMap.get(y).get(x);
+		//int materialId = block.getMaterial().getId();
+		//for(Entry<Integer, Material> entry : Controller.materialIdentifiers.entrySet()){
+		//	if(entry.getKey() == materialId) return entry.getValue();
+		//}
+		if(block != null) return block;
+		return Block.AIR;
 	}
 }

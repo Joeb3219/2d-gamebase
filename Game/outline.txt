@@ -24,3 +24,13 @@ OUTLINE:
 ======================
 TODO:
 ======================
+
+- Biome generation
+	- Generate a heightmap with noise
+	- Generate generic bottom sector of the chunk (basically everything below level ~70, but adjusted to heightmap)
+	- Generate temperature + rainfall ints
+	- Generate a biome according to the heightmap, but with blocks that would exist in the temp + rainfall biome
+	- Generate cave systems via worms
+- Mobs, player, sprites, etc.
+- Convert to OpenGL/LWJGL
+-

@@ -44,8 +44,8 @@ public class World{
 	}
 
 	public Tile getTile(int x, int y){
-		x /= 8;
-		y /= 8;
+		x /= Controller._TILESIZE;
+		y /= Controller._TILESIZE;
 		x = (int) Math.floor(x--);
 		y = (int) Math.floor(y--);
 		
@@ -54,7 +54,9 @@ public class World{
 		x = Math.abs(x);
 		
 		for(Chunk chunk : chunks){
-			if(chunk.getId() == chunkId) return chunk.getTile(x, y);
+			if(chunk.getId() == chunkId) {
+				return chunk.getBlockAt(x, y).getMaterial().getPlacedTile();
+			}
 		}
 		
 		Chunk newChunk = new Chunk(chunkId);
@@ -67,8 +69,8 @@ public class World{
 		int xMin = (int) ((playerX - (Game._WIDTH / 2)) - (2.5 * 16));
 		int xMax = (int) ((playerX + (Game._WIDTH / 2)) + (2.5 * 16));
 		
-		for(int y = 0 * 8; y < (256 * 8); y += 8){
-			for(int x = xMin; x < xMax; x += 8){
+		for(int y = 0 * Controller._TILESIZE; y < (256 * Controller._TILESIZE); y += Controller._TILESIZE){
+			for(int x = xMin; x < xMax; x += Controller._TILESIZE){
 				getTile(x,y).render(x, y, screen);
 			}
 		}
@@ -85,20 +87,22 @@ public class World{
 	}
 	
 	public int getChunkId(int x){
-		x /= 8;
+		x /= Controller._TILESIZE;
 		x = (int) Math.floor(x--);
 		
 		int chunkId = x/16;
+		//System.out.println(chunkId + " " + x + " " + x/16);
+		//if(x <= 0) chunkId --;
 		return chunkId;
 	}
-
-	/*public void run() {
-		
-		try {
-			chunkThread.sleep(10000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}*/
+	
+	public boolean isStandingOnSolid(int xPos, int yPos){
+		if(getTile(xPos, yPos + Controller._TILESIZE).isSolid()) return true;
+		return false;
+	}
+	
+	public int getTotalChunks(){
+		return chunks.size();
+	}
 	
 }
